@@ -1,10 +1,3 @@
-"""Pretrained semantic matching model.
-
-This service intentionally lives outside the main CREATECH backend.
-It follows the PDF deployment shape: load the ML model once, then expose
-prediction through FastAPI.
-"""
-
 from functools import lru_cache
 from typing import Iterable
 
@@ -39,3 +32,7 @@ class SmartMatchModel:
 @lru_cache(maxsize=1)
 def get_model() -> SmartMatchModel:
     return SmartMatchModel()
+
+
+if __name__ == "__main__":
+    get_model()
