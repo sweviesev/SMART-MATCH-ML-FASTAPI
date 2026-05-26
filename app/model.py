@@ -1,7 +1,19 @@
+import os
+# Limit threads to reduce memory footprint on Render free tier
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+
 from functools import lru_cache
 from typing import Iterable
 
 import numpy as np
+import torch
+
+torch.set_num_threads(1)
+
 from sentence_transformers import SentenceTransformer
 
 
@@ -10,7 +22,8 @@ MODEL_NAME = "./model_cache"
 
 class SmartMatchModel:
     def __init__(self):
-        self.model = SentenceTransformer(MODEL_NAME)
+        # Force CPU to avoid CUDA initialization memory spike
+        self.model = SentenceTransformer(MODEL_NAME, device="cpu")
 
     def encode(self, texts: Iterable[str]) -> np.ndarray:
         return self.model.encode(
