@@ -4,10 +4,21 @@ from app.model import get_model
 from app.schemas import ScoreRequest, ScoreResponse
 
 
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Preload the model on startup so the first request doesn't timeout
+    print("Loading ML model...")
+    get_model()
+    print("Model loaded successfully.")
+    yield
+
 app = FastAPI(
     title="CREATECH Smart Match ML API",
     description="Separate FastAPI service for semantic Smart Match scoring.",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 
