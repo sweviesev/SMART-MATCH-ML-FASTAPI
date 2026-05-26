@@ -4,5 +4,5 @@ fastapi
 uvicorn[standard]
 pydantic
 sentence-transformers
-torch==2.2.2+cpu
+torch==2.1.2+cpu
 numpy
